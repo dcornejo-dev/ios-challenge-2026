@@ -3,11 +3,27 @@ import SwiftUI
 
 struct AddCatStepperView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel = AddCatViewModel()
     @State private var showDiscardAlert = false
     @State private var forwardDirection = true
 
     var body: some View {
+        Group {
+            if viewModel.isSaved {
+                AddCatSuccessView(catName: viewModel.name) { dismiss() }
+                    .transition(.opacity)
+            } else {
+                stepperContent
+                    .transition(.opacity)
+            }
+        }
+        .animation(.easeInOut(duration: 0.3), value: viewModel.isSaved)
+        .presentationDetents([.large])
+        .interactiveDismissDisabled(viewModel.hasUnsavedData || viewModel.isSaved)
+    }
+
+    private var stepperContent: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 StepDashesIndicator(
@@ -47,8 +63,6 @@ struct AddCatStepperView: View {
                 Text("Your progress will be lost.")
             }
         }
-        .presentationDetents([.large])
-        .interactiveDismissDisabled(viewModel.hasUnsavedData)
     }
 
     private var stepTransition: AnyTransition {
@@ -110,7 +124,7 @@ struct AddCatStepperView: View {
         case 1:
             AddCatDetailsStep(viewModel: viewModel)
         case 2:
-            AddCatPhotoStep()
+            AddCatPhotoStep(viewModel: viewModel)
         default:
             EmptyView()
         }
@@ -133,6 +147,8 @@ struct AddCatStepperView: View {
         case 0, 1:
             forwardDirection = true
             _ = viewModel.validateAndAdvance()
+        case 2:
+            viewModel.save(context: modelContext)
         default:
             break
         }
