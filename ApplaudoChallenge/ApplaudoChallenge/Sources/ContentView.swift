@@ -6,12 +6,8 @@ public struct ContentView: View {
     public var body: some View {
         TabView {
             // MARK: - Tab 1: Cat List
-            // TODO: Replace placeholder with your CatListView
             NavigationStack {
-                Text("Cat List")
-                    .font(AppTheme.Fonts.title)
-                    .foregroundColor(AppTheme.Colors.textPrimary)
-                    .navigationTitle("Cats")
+                CatListView()
             }
             .tabItem {
                 Label("Cats", systemImage: "cat")
