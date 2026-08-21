@@ -53,6 +53,12 @@ struct RegisteredCatDetailView: View {
             SectionHeader(title: "Info", systemImage: "info.circle")
             infoRow(label: "Breed", value: cat.breedName)
             infoRow(label: "Age", value: "\(cat.age) \(cat.age == 1 ? "year" : "years")")
+            if let gender = CatGender(rawValue: cat.gender) {
+                infoRow(label: "Gender", value: gender.displayName)
+            }
+            if !cat.color.isEmpty {
+                infoRow(label: "Color", value: CatColor(rawValue: cat.color)?.displayName ?? cat.color.capitalized)
+            }
         }
     }
 
