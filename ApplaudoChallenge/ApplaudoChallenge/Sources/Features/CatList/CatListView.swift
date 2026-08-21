@@ -38,7 +38,7 @@ struct CatListView: View {
                         NavigationLink(value: breed) {
                             AppCard(
                                 title: breed.name,
-                                subtitle: breed.description,
+                                subtitle: breed.description ?? "",
                                 imageSystemName: "cat",
                                 imageURL: breed.imageURL,
                                 showChevron: true

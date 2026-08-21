@@ -111,8 +111,8 @@ struct CatBreedsServiceTests {
         #expect(abys.origin == "Egypt")
         #expect(abys.temperament == "Active, Energetic, Independent")
         #expect(abys.lifeSpan == "14 - 15")
-        #expect(abys.weight.imperial == "7 - 10")
-        #expect(abys.weight.metric == "3 - 5")
+        #expect(abys.weight?.imperial == "7 - 10")
+        #expect(abys.weight?.metric == "3 - 5")
         #expect(abys.referenceImageId == "0XYvRd7oD")
     }
 
@@ -126,5 +126,34 @@ struct CatBreedsServiceTests {
         #expect(aegean.id == "aege")
         #expect(aegean.name == "Aegean")
         #expect(aegean.referenceImageId == nil)
+    }
+
+    @Test("decodes breeds when description, temperament, life_span, weight are null")
+    func nullDetailFields() throws {
+        let sparseJSON = """
+            [
+                {
+                    "id": "spr",
+                    "name": "Sparse Breed",
+                    "description": null,
+                    "origin": null,
+                    "temperament": null,
+                    "life_span": null,
+                    "weight": null,
+                    "reference_image_id": null
+                }
+            ]
+            """.data(using: .utf8)!
+        let requester = MockNetworkingRequester(data: sparseJSON)
+        let service = CatBreedsService(requester: requester)
+
+        let breeds = try #require(collectFirst(from: service.fetchBreeds(page: 0, limit: 10)))
+        #expect(breeds.count == 1)
+        let sparse = breeds[0]
+        #expect(sparse.description == nil)
+        #expect(sparse.temperament == nil)
+        #expect(sparse.lifeSpan == nil)
+        #expect(sparse.weight == nil)
+        #expect(sparse.temperamentTraits.isEmpty)
     }
 }

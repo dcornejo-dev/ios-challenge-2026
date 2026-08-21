@@ -100,8 +100,25 @@ struct AddCatPhotoStep: View {
     @MainActor
     private func loadPhoto(from item: PhotosPickerItem?) async {
         guard let item else { return }
-        if let data = try? await item.loadTransferable(type: Data.self) {
-            viewModel.photo = data
-        }
+        guard let data = try? await item.loadTransferable(type: Data.self) else { return }
+        let downscaled = await Self.downscale(data)
+        viewModel.photo = downscaled ?? data
+    }
+
+    private static func downscale(_ data: Data, maxDimension: CGFloat = 1024, quality: CGFloat = 0.8) async -> Data? {
+        await Task.detached(priority: .userInitiated) {
+            guard let image = UIImage(data: data) else { return nil }
+            let size = image.size
+            let longest = max(size.width, size.height)
+            guard longest > 0 else { return nil }
+            let scale = min(1, maxDimension / longest)
+            let target = CGSize(width: floor(size.width * scale), height: floor(size.height * scale))
+            let format = UIGraphicsImageRendererFormat.default()
+            format.scale = 1
+            format.opaque = true
+            let renderer = UIGraphicsImageRenderer(size: target, format: format)
+            let resized = renderer.image { _ in image.draw(in: CGRect(origin: .zero, size: target)) }
+            return resized.jpegData(compressionQuality: quality)
+        }.value
     }
 }

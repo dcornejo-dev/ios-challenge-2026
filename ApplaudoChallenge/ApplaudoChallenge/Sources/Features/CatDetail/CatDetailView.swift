@@ -46,12 +46,18 @@ struct CatDetailView: View {
 
     private var detailSections: some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.lg) {
-            textSection(title: "Description", systemImage: "text.alignleft", text: breed.description)
-            if let origin = breed.origin {
+            if let description = breed.description, !description.isEmpty {
+                textSection(title: "Description", systemImage: "text.alignleft", text: description)
+            }
+            if let origin = breed.origin, !origin.isEmpty {
                 textSection(title: "Origin", systemImage: "globe", text: origin)
             }
-            temperamentSection
-            textSection(title: "Life Span", systemImage: "heart", text: "\(breed.lifeSpan) years")
+            if !breed.temperamentTraits.isEmpty {
+                temperamentSection
+            }
+            if let lifeSpan = breed.lifeSpan, !lifeSpan.isEmpty {
+                textSection(title: "Life Span", systemImage: "heart", text: "\(lifeSpan) years")
+            }
         }
         .padding(.horizontal, AppTheme.Spacing.md)
         .padding(.bottom, AppTheme.Spacing.lg)
