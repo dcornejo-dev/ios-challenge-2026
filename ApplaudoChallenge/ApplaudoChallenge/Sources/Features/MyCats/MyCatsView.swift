@@ -4,12 +4,30 @@ import SwiftUI
 struct MyCatsView: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel = MyCatsViewModel()
+    @State private var showRegistrationSheet = false
 
     var body: some View {
         content
             .navigationTitle("My Cats")
+            .toolbar {
+                if !viewModel.cats.isEmpty {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            showRegistrationSheet = true
+                        } label: {
+                            Image(systemName: "plus")
+                        }
+                        .accessibilityLabel("Register a Cat")
+                    }
+                }
+            }
             .navigationDestination(for: RegisteredCat.self) { cat in
                 RegisteredCatDetailView(cat: cat)
+            }
+            .sheet(isPresented: $showRegistrationSheet) {
+                viewModel.fetchCats(context: modelContext)
+            } content: {
+                AddCatStepperView()
             }
             .onAppear {
                 viewModel.fetchCats(context: modelContext)
@@ -22,7 +40,9 @@ struct MyCatsView: View {
             EmptyStateView(
                 systemImage: "pawprint",
                 title: "No Cats Yet",
-                message: "Use the Add Cat tab to register your first cat."
+                message: "Register your first cat to see it here.",
+                buttonTitle: "Register a Cat",
+                action: { showRegistrationSheet = true }
             )
         } else {
             ScrollView {
