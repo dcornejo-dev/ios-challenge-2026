@@ -21,19 +21,12 @@ struct CatDetailView: View {
             .aspectRatio(4 / 3, contentMode: .fit)
             .overlay {
                 if let imageURL = breed.imageURL {
-                    AsyncImage(url: imageURL) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        case .failure:
-                            imagePlaceholder
-                        case .empty:
-                            ProgressView()
-                        @unknown default:
-                            imagePlaceholder
-                        }
+                    CachedAsyncImage(url: imageURL) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    } placeholder: {
+                        imagePlaceholder
                     }
                 } else {
                     imagePlaceholder
@@ -53,12 +46,18 @@ struct CatDetailView: View {
 
     private var detailSections: some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.lg) {
-            textSection(title: "Description", systemImage: "text.alignleft", text: breed.description)
-            if let origin = breed.origin {
+            if let description = breed.description, !description.isEmpty {
+                textSection(title: "Description", systemImage: "text.alignleft", text: description)
+            }
+            if let origin = breed.origin, !origin.isEmpty {
                 textSection(title: "Origin", systemImage: "globe", text: origin)
             }
-            temperamentSection
-            textSection(title: "Life Span", systemImage: "heart", text: "\(breed.lifeSpan) years")
+            if !breed.temperamentTraits.isEmpty {
+                temperamentSection
+            }
+            if let lifeSpan = breed.lifeSpan, !lifeSpan.isEmpty {
+                textSection(title: "Life Span", systemImage: "heart", text: "\(lifeSpan) years")
+            }
         }
         .padding(.horizontal, AppTheme.Spacing.md)
         .padding(.bottom, AppTheme.Spacing.lg)
@@ -75,12 +74,8 @@ struct CatDetailView: View {
 
     private var temperamentSection: some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
-            SectionHeader(title: "Temperament", systemImage: "sparkles")
-            LazyVGrid(
-                columns: [GridItem(.adaptive(minimum: 100))],
-                alignment: .leading,
-                spacing: AppTheme.Spacing.sm
-            ) {
+            SectionHeader(title: "Temperament", systemImage: "brain.head.profile")
+            FlowLayout(spacing: AppTheme.Spacing.sm) {
                 ForEach(breed.temperamentTraits, id: \.self) { trait in
                     ChipView(title: trait)
                 }

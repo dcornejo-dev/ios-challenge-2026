@@ -6,7 +6,7 @@ struct CatListView: View {
 
     var body: some View {
         content
-            .navigationTitle("Cats")
+            .navigationTitle("Breeds")
             .navigationDestination(for: CatBreed.self) { breed in
                 CatDetailView(breed: breed)
             }
@@ -38,8 +38,9 @@ struct CatListView: View {
                         NavigationLink(value: breed) {
                             AppCard(
                                 title: breed.name,
-                                subtitle: breed.description,
+                                subtitle: breed.description ?? "",
                                 imageSystemName: "cat",
+                                imageURL: breed.imageURL,
                                 showChevron: true
                             )
                         }
