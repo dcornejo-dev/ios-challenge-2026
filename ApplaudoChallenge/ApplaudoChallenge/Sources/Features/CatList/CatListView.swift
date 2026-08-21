@@ -8,9 +8,7 @@ struct CatListView: View {
         content
             .navigationTitle("Cats")
             .navigationDestination(for: CatBreed.self) { breed in
-                Text("Detail: \(breed.name)")
-                    .font(AppTheme.Fonts.title)
-                    .foregroundColor(AppTheme.Colors.textPrimary)
+                CatDetailView(breed: breed)
             }
             .task {
                 if case .idle = viewModel.state {

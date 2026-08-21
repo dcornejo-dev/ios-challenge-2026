@@ -21,3 +21,16 @@ public struct CatBreed: Decodable, Hashable, Identifiable {
         case referenceImageId = "reference_image_id"
     }
 }
+
+public extension CatBreed {
+    var imageURL: URL? {
+        referenceImageId.flatMap { URL(string: "https://cdn2.thecatapi.com/images/\($0).jpg") }
+    }
+
+    var temperamentTraits: [String] {
+        temperament
+            .split(separator: ",")
+            .map { $0.trimmingCharacters(in: .whitespaces) }
+            .filter { !$0.isEmpty }
+    }
+}
