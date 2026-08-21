@@ -9,7 +9,7 @@ A cat breed as defined by The Cat API — a category like "Persian" or "Siamese"
 _Avoid_: Cat (when referring to the API-sourced breed catalog)
 
 **Registered Cat**:
-An individual cat created by the user — a specific animal with a name, age, gender, color, and photo that belongs to a Breed.
+An individual cat created by the user — a specific animal with a name, age, and photo that belongs to a Breed.
 _Avoid_: Custom cat, local cat, created cat, saved cat
 
 **Breed List**:

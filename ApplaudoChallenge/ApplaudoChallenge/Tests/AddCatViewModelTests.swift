@@ -305,8 +305,6 @@ struct AddCatViewModelTests {
         let vm = advanceToStep2()
         vm.age = "5"
         vm.shortDescription = "A lovely friendly cat"
-        vm.color = CatColor.orange.rawValue
-        vm.gender = .male
         _ = vm.validateAndAdvance()
 
         vm.save(context: context)
@@ -323,8 +321,8 @@ struct AddCatViewModelTests {
         #expect(cat.breedId == "beng")
         #expect(cat.age == 5)
         #expect(cat.shortDescription == "A lovely friendly cat")
-        #expect(cat.color == "orange")
-        #expect(cat.gender == CatGender.male.rawValue)
+        #expect(cat.color == "")
+        #expect(cat.gender == CatGender.unknown.rawValue)
     }
 
     // MARK: - Reset
@@ -334,8 +332,6 @@ struct AddCatViewModelTests {
         let vm = advanceToStep2()
         vm.age = "5"
         vm.shortDescription = "A lovely friendly cat"
-        vm.color = CatColor.orange.rawValue
-        vm.gender = .male
         _ = vm.validateAndAdvance()
 
         vm.reset()
@@ -346,8 +342,6 @@ struct AddCatViewModelTests {
         #expect(vm.breedId.isEmpty)
         #expect(vm.age.isEmpty)
         #expect(vm.shortDescription.isEmpty)
-        #expect(vm.color.isEmpty)
-        #expect(vm.gender == .unknown)
         #expect(vm.photo == nil)
         #expect(vm.step1Errors.isEmpty)
         #expect(vm.step2Errors.isEmpty)

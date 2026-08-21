@@ -30,14 +30,6 @@ struct AddCatReviewView: View {
                 reviewRow(title: "Age", value: "\(viewModel.age) years", icon: "calendar")
                 reviewRow(title: "Description", value: viewModel.shortDescription, icon: "text.alignleft")
 
-                if !viewModel.color.isEmpty,
-                    let color = CatColor(rawValue: viewModel.color)
-                {
-                    reviewRow(title: "Coat Color", value: color.displayName, icon: "paintpalette")
-                }
-
-                reviewRow(title: "Gender", value: viewModel.gender.displayName, icon: "figure.stand")
-
                 AppButton(title: "Save", action: onSave)
                     .padding(.top, AppTheme.Spacing.sm)
             }

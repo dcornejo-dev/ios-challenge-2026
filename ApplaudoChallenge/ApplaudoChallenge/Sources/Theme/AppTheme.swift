@@ -42,6 +42,13 @@ enum AppTheme {
         static let small: CGFloat = 8
         static let medium: CGFloat = 12
         static let large: CGFloat = 16
+        static let pill: CGFloat = .infinity
+    }
+
+    // MARK: - Animation
+
+    enum Animation {
+        static let standard: Double = 0.15
     }
 }
 

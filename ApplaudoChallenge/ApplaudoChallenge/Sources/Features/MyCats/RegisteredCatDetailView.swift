@@ -53,8 +53,6 @@ struct RegisteredCatDetailView: View {
             SectionHeader(title: "Info", systemImage: "info.circle")
             infoRow(label: "Breed", value: cat.breedName)
             infoRow(label: "Age", value: "\(cat.age) \(cat.age == 1 ? "year" : "years")")
-            infoRow(label: "Gender", value: CatGender(rawValue: cat.gender)?.displayName ?? cat.gender.capitalized)
-            infoRow(label: "Color", value: CatColor(rawValue: cat.color)?.displayName ?? cat.color.capitalized)
         }
     }
 

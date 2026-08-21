@@ -13,7 +13,7 @@ Additionally, with no input validation, users could submit incomplete or nonsens
 
 ## Solution
 
-The second tab presents a guided multi-step registration form with three steps: Basic Info (photo, name, breed), Details (age, description, color, gender), and Review (summary with save). Each step validates its fields before allowing the user to advance, showing inline error messages next to invalid fields. On save, the cat is persisted locally using SwiftData and survives app restarts. The user receives visual confirmation of the successful registration and can register another cat or start fresh.
+The second tab presents a guided multi-step registration form with three steps: Basic Info (photo, name, breed), Details (age, description), and Review (summary with save). Each step validates its fields before allowing the user to advance, showing inline error messages next to invalid fields. On save, the cat is persisted locally using SwiftData and survives app restarts. The user receives visual confirmation of the successful registration and can register another cat or start fresh.
 
 ## User Stories
 
@@ -28,9 +28,7 @@ The second tab presents a guided multi-step registration form with three steps: 
 9. As a user, I want to see a preview of my selected photo in the form, so that I can confirm I picked the right image.
 10. As a user, I want to enter my cat's age as a number in the second step, so that the form captures how old my cat is.
 11. As a user, I want to write a short description of my cat, so that I can capture what makes my cat special.
-12. As a user, I want to select my cat's coat color from a predefined list, so that I can describe my cat's appearance without guessing category names.
-13. As a user, I want to select my cat's gender, so that the registration includes basic biological information.
-14. As a user, I want to review all entered information on the final step before saving, so that I can catch and correct mistakes.
+12. As a user, I want to review all entered information on the final step before saving, so that I can catch and correct mistakes.
 15. As a user, I want to see my selected photo in the review summary, so that I can confirm the complete entry before committing.
 16. As a user, I want to tap "Save" to persist my cat locally, so that the entry survives even if I close the app.
 17. As a user, I want to see a visual confirmation after saving, so that I know the registration succeeded.
@@ -50,9 +48,9 @@ The second tab presents a guided multi-step registration form with three steps: 
 
 ### Data Model
 - A new `RegisteredCat` entity is created, completely separate from `CatBreed`. A registered cat is an individual pet; a `CatBreed` is an encyclopedia entry from the API. They share no inheritance or protocol.
-- `RegisteredCat` is a SwiftData `@Model` class with properties: name, breedName, breedId (strings referencing the API breed), age (integer), shortDescription (avoiding the `description` name collision with `CustomStringConvertible`), color, gender (stored as raw string for SwiftData simplicity), optional photo data (with external storage attribute), and a createdAt timestamp.
-- A `CatGender` enum (`male`, `female`, `unknown`) with `CaseIterable` conformance provides type safety in the UI layer; its `rawValue` is what gets stored.
-- Coat color options are a predefined set: Black, White, Gray, Orange, Brown, Cream, Calico, Tabby, Tortoiseshell, Bicolor, Tuxedo, Siamese, Other.
+- `RegisteredCat` is a SwiftData `@Model` class with properties: name, breedName, breedId (strings referencing the API breed), age (integer), shortDescription (avoiding the `description` name collision with `CustomStringConvertible`), color, gender (stored as raw string for SwiftData simplicity), optional photo data (with external storage attribute), and a createdAt timestamp. The color and gender stored properties are retained for schema compatibility but are no longer collected in the UI.
+- A `CatGender` enum (`male`, `female`, `unknown`) with `CaseIterable` conformance provides type safety; its `rawValue` is what gets stored. Gender is no longer exposed in the registration form.
+- Coat color options (`CatColor` enum) are retained in the codebase for schema compatibility but are no longer exposed in the registration form.
 
 ### Persistence
 - SwiftData is the persistence framework. The model container is initialized at the app entry point on the `WindowGroup` scene.
@@ -66,7 +64,7 @@ The second tab presents a guided multi-step registration form with three steps: 
 
 ### Form Steps
 - **Step 1 — Basic Info**: Photo picker (optional, using PhotosUI `PhotosPicker`), cat name (text field), breed (tappable field that opens a searchable sheet).
-- **Step 2 — Details**: Age (number pad text field, validated as integer), short description (text field), coat color (predefined picker), gender (segmented control, defaults to unknown).
+- **Step 2 — Details**: Age (number pad text field, validated as integer), short description (text field).
 - **Step 3 — Review**: Read-only summary of all entered data with section headers. Photo preview if provided. A single "Save" action button.
 
 ### Breed Picker
@@ -82,7 +80,7 @@ The second tab presents a guided multi-step registration form with three steps: 
 ### Validation (Story 5)
 - Validation fires only when the user taps "Next" (or "Save" on the review step). Errors are not shown while the user is still typing.
 - Each field clears its own error message when the user edits it, providing immediate feedback that the correction is being registered.
-- Validation rules: name must be at least 2 characters; breed must be selected (non-empty); age must be an integer between 1 and 30; short description must be at least 10 characters. Color is optional. Gender has a default value (unknown) and requires no validation. Photo is optional.
+- Validation rules: name must be at least 2 characters; breed must be selected (non-empty); age must be an integer between 1 and 30; short description must be at least 10 characters. Photo is optional.
 - The "Next" button remains enabled at all times. Tapping it with invalid fields shows errors inline but does not advance.
 
 ### Post-Save Flow
@@ -132,5 +130,4 @@ Tests should verify external behavior — the ViewModel's published state given 
 
 - Stories 3 and 5 are specced together because validation is intrinsic to the multi-step form — building the form without validation and retrofitting it later would mean restructuring the ViewModel's advance logic. Designing them as one unit produces a single, coherent validation architecture.
 - The `RegisteredCat` model lives in the app target (not NetworkLayer) because persistence is an app-layer concern. The NetworkLayer module stays focused on API communication.
-- The predefined coat color list is intentionally small and opinionated. "Other" is included as an escape hatch for colors not in the list.
 - The breed picker fetches breeds independently from the breed list on Tab 1. This keeps the two features decoupled — the picker works even if the user hasn't visited the breed list, and they don't share ViewModel state.

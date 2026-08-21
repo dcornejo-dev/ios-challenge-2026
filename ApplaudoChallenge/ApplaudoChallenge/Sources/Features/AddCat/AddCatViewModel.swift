@@ -17,8 +17,6 @@ final class AddCatViewModel: ObservableObject {
     @Published var breedId = ""
     @Published var age = ""
     @Published var shortDescription = ""
-    @Published var color = ""
-    @Published var gender: CatGender = .unknown
     @Published var photo: Data?
     @Published var breedsState: ViewState<[CatBreed]> = .idle
     @Published var step1Errors: [String: String] = [:]
@@ -73,8 +71,8 @@ final class AddCatViewModel: ObservableObject {
             breedId: breedId,
             age: ageInt,
             shortDescription: shortDescription.trimmingCharacters(in: .whitespacesAndNewlines),
-            color: color,
-            gender: gender,
+            color: "",
+            gender: .unknown,
             photo: photo
         )
         context.insert(cat)
@@ -88,8 +86,6 @@ final class AddCatViewModel: ObservableObject {
         breedId = ""
         age = ""
         shortDescription = ""
-        color = ""
-        gender = .unknown
         photo = nil
         step1Errors = [:]
         step2Errors = [:]
