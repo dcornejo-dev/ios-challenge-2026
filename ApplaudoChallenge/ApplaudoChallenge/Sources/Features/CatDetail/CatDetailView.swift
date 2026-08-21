@@ -75,12 +75,8 @@ struct CatDetailView: View {
 
     private var temperamentSection: some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
-            SectionHeader(title: "Temperament", systemImage: "sparkles")
-            LazyVGrid(
-                columns: [GridItem(.adaptive(minimum: 100))],
-                alignment: .leading,
-                spacing: AppTheme.Spacing.sm
-            ) {
+            SectionHeader(title: "Temperament", systemImage: "brain.head.profile")
+            FlowLayout(spacing: AppTheme.Spacing.sm) {
                 ForEach(breed.temperamentTraits, id: \.self) { trait in
                     ChipView(title: trait)
                 }
