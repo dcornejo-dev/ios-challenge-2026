@@ -23,7 +23,15 @@ enum CatColor: String, CaseIterable {
 }
 
 @Model
-final class RegisteredCat {
+final class RegisteredCat: Hashable {
+    static func == (lhs: RegisteredCat, rhs: RegisteredCat) -> Bool {
+        lhs.persistentModelID == rhs.persistentModelID
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(persistentModelID)
+    }
+
     var name: String
     var breedName: String
     var breedId: String

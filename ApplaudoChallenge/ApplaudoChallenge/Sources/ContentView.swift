@@ -5,7 +5,6 @@ public struct ContentView: View {
 
     public var body: some View {
         TabView {
-            // MARK: - Tab 1: Cat List
             NavigationStack {
                 CatListView()
             }
@@ -13,7 +12,13 @@ public struct ContentView: View {
                 Label("Cats", systemImage: "cat")
             }
 
-            // MARK: - Tab 2: Add Cat
+            NavigationStack {
+                MyCatsView()
+            }
+            .tabItem {
+                Label("My Cats", systemImage: "pawprint")
+            }
+
             NavigationStack {
                 AddCatStepperView()
             }
