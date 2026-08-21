@@ -9,7 +9,7 @@ public struct ContentView: View {
                 CatListView()
             }
             .tabItem {
-                Label("Cats", systemImage: "cat")
+                Label("Breeds", systemImage: "cat")
             }
 
             NavigationStack {

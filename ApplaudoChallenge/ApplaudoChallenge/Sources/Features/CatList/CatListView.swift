@@ -6,7 +6,7 @@ struct CatListView: View {
 
     var body: some View {
         content
-            .navigationTitle("Cats")
+            .navigationTitle("Breeds")
             .navigationDestination(for: CatBreed.self) { breed in
                 CatDetailView(breed: breed)
             }
