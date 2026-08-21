@@ -5,7 +5,6 @@ public struct ContentView: View {
 
     public var body: some View {
         TabView {
-            // MARK: - Tab 1: Cat List
             NavigationStack {
                 CatListView()
             }
@@ -13,22 +12,17 @@ public struct ContentView: View {
                 Label("Cats", systemImage: "cat")
             }
 
-            // MARK: - Tab 2: Add Cat
-            // TODO: Replace placeholder with your AddCatStepperView
             NavigationStack {
-                Text("Add New Cat")
-                    .font(AppTheme.Fonts.title)
-                    .foregroundColor(AppTheme.Colors.textPrimary)
-                    .navigationTitle("Add Cat")
+                MyCatsView()
             }
             .tabItem {
-                Label("Add Cat", systemImage: "plus.circle")
+                Label("My Cats", systemImage: "pawprint")
             }
         }
         .tint(AppTheme.Colors.primary)
     }
 }
 
-#Preview {
+#Preview{
     ContentView()
 }

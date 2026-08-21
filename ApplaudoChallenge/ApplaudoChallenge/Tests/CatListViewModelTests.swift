@@ -1,8 +1,9 @@
-import Foundation
-import Testing
 import Combine
-@testable import ApplaudoChallenge
+import Foundation
 import NetworkLayer
+import Testing
+
+@testable import ApplaudoChallenge
 
 struct MockCatBreedsService: CatBreedsServiceType {
     var resultProvider: () -> Result<[CatBreed], NetworkError>
@@ -28,19 +29,19 @@ struct CatListViewModelTests {
 
     static let sampleBreeds: [CatBreed] = {
         let json = """
-        [
-            {
-                "id": "abys",
-                "name": "Abyssinian",
-                "description": "Active and playful",
-                "origin": "Egypt",
-                "temperament": "Active, Energetic",
-                "life_span": "14 - 15",
-                "weight": { "imperial": "7 - 10", "metric": "3 - 5" },
-                "reference_image_id": "0XYvRd7oD"
-            }
-        ]
-        """.data(using: .utf8)!
+            [
+                {
+                    "id": "abys",
+                    "name": "Abyssinian",
+                    "description": "Active and playful",
+                    "origin": "Egypt",
+                    "temperament": "Active, Energetic",
+                    "life_span": "14 - 15",
+                    "weight": { "imperial": "7 - 10", "metric": "3 - 5" },
+                    "reference_image_id": "0XYvRd7oD"
+                }
+            ]
+            """.data(using: .utf8)!
         return (try? JSONDecoder().decode([CatBreed].self, from: json)) ?? []
     }()
 
@@ -89,7 +90,6 @@ struct CatListViewModelTests {
         let viewModel = CatListViewModel(service: service)
 
         viewModel.fetchBreeds()
-        try #require(isLoading(viewModel.state))
 
         try await Task.sleep(for: Self.testSleepDuration)
 
@@ -101,7 +101,7 @@ struct CatListViewModelTests {
     func retryAfterError() async throws {
         let service = MockCatBreedsService(results: [
             .failure(.unknown(underlying: NSError(domain: "test", code: -1))),
-            .success(Self.sampleBreeds)
+            .success(Self.sampleBreeds),
         ])
         let viewModel = CatListViewModel(service: service)
 

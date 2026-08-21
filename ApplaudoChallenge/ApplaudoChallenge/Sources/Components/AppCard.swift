@@ -5,17 +5,12 @@ struct AppCard: View {
     let title: String
     var subtitle: String = ""
     var imageSystemName: String = "photo"
+    var imageData: Data? = nil
     var showChevron: Bool = true
 
     var body: some View {
         HStack(spacing: AppTheme.Spacing.md) {
-            // Image
-            Image(systemName: imageSystemName)
-                .font(.title2)
-                .foregroundColor(AppTheme.Colors.primary)
-                .frame(width: 50, height: 50)
-                .background(AppTheme.Colors.primary.opacity(0.1))
-                .clipShape(Circle())
+            iconView
 
             // Text Content
             VStack(alignment: .leading, spacing: AppTheme.Spacing.xs) {
@@ -44,11 +39,29 @@ struct AppCard: View {
         .clipShape(RoundedRectangle(cornerRadius: AppTheme.CornerRadius.medium))
         .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
     }
+
+    @ViewBuilder
+    private var iconView: some View {
+        if let imageData, let uiImage = UIImage(data: imageData) {
+            Image(uiImage: uiImage)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 50, height: 50)
+                .clipShape(Circle())
+        } else {
+            Image(systemName: imageSystemName)
+                .font(.title2)
+                .foregroundColor(AppTheme.Colors.primary)
+                .frame(width: 50, height: 50)
+                .background(AppTheme.Colors.primary.opacity(0.1))
+                .clipShape(Circle())
+        }
+    }
 }
 
 // MARK: - Preview
 
-#Preview("App Card") {
+#Preview("App Card"){
     VStack(spacing: AppTheme.Spacing.md) {
         AppCard(
             title: "Persian",

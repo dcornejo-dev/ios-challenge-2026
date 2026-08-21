@@ -16,7 +16,7 @@ extension MoyaProvider {
         let networkingSession: Session = .init(configuration: .default)
         // Logs full request and response details to the console — reduce verbosity for non-debug builds.
         let loggerPlugin: PluginType = NetworkLoggerPlugin(configuration: .init(logOptions: .verbose))
-        let plugins: [PluginType] = [loggerPlugin] // Add authentication, retry, or caching plugins here if needed.
+        let plugins: [PluginType] = [loggerPlugin]  // Add authentication, retry, or caching plugins here if needed.
 
         return MoyaProvider<MultiTarget>(session: networkingSession, plugins: plugins)
     }

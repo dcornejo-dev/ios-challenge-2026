@@ -1,6 +1,7 @@
+import Combine
 import Foundation
 import Testing
-import Combine
+
 @testable import NetworkLayer
 
 struct MockNetworkingRequester: NetworkingRequesterType {
@@ -33,29 +34,29 @@ struct CapturingRequester: NetworkingRequesterType {
 struct CatBreedsServiceTests {
 
     static let validBreedJSON = """
-    [
-        {
-            "id": "abys",
-            "name": "Abyssinian",
-            "description": "Active and playful breed",
-            "origin": "Egypt",
-            "temperament": "Active, Energetic, Independent",
-            "life_span": "14 - 15",
-            "weight": { "imperial": "7 - 10", "metric": "3 - 5" },
-            "reference_image_id": "0XYvRd7oD"
-        },
-        {
-            "id": "aege",
-            "name": "Aegean",
-            "description": "Native to Greece",
-            "origin": "Greece",
-            "temperament": "Affectionate, Social",
-            "life_span": "9 - 12",
-            "weight": { "imperial": "7 - 10", "metric": "3 - 5" },
-            "reference_image_id": null
-        }
-    ]
-    """.data(using: .utf8)!
+        [
+            {
+                "id": "abys",
+                "name": "Abyssinian",
+                "description": "Active and playful breed",
+                "origin": "Egypt",
+                "temperament": "Active, Energetic, Independent",
+                "life_span": "14 - 15",
+                "weight": { "imperial": "7 - 10", "metric": "3 - 5" },
+                "reference_image_id": "0XYvRd7oD"
+            },
+            {
+                "id": "aege",
+                "name": "Aegean",
+                "description": "Native to Greece",
+                "origin": "Greece",
+                "temperament": "Affectionate, Social",
+                "life_span": "9 - 12",
+                "weight": { "imperial": "7 - 10", "metric": "3 - 5" },
+                "reference_image_id": null
+            }
+        ]
+        """.data(using: .utf8)!
 
     private func collectFirst<T>(
         from publisher: AnyPublisher<T, NetworkError>
@@ -87,7 +88,7 @@ struct CatBreedsServiceTests {
         #expect(target.requestPath == "breeds")
         #expect(target.requestMethod == .get)
 
-        guard case let .getBreeds(page, limit) = target as? CatBreedsTarget else {
+        guard case .getBreeds(let page, let limit) = target as? CatBreedsTarget else {
             Issue.record("Expected CatBreedsTarget.getBreeds, got \(type(of: target))")
             return
         }

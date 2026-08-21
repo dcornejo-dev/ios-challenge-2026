@@ -45,3 +45,8 @@ Tuist/.build
 
 # mise
 mise.toml
+
+# Claude Code
+.claude/
+CLAUDE.md
+**/CLAUDE.md

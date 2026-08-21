@@ -13,7 +13,7 @@ let project = Project(
                     "UILaunchScreen": [
                         "UIColorName": "",
                         "UIImageName": "",
-                    ],
+                    ]
                 ]
             ),
             buildableFolders: [
@@ -21,7 +21,7 @@ let project = Project(
                 "ApplaudoChallenge/Resources",
             ],
             dependencies: [
-                .target(name: "NetworkLayer"),
+                .target(name: "NetworkLayer")
             ]
         ),
         .target(
@@ -42,10 +42,10 @@ let project = Project(
             bundleId: "dev.tuist.NetworkLayer",
             infoPlist: .default,
             buildableFolders: [
-                "modules/NetworkLayer/Sources",
+                "modules/NetworkLayer/Sources"
             ],
             dependencies: [
-                .external(name: "Moya"),
+                .external(name: "Moya")
             ]
         ),
         .target(
@@ -55,7 +55,7 @@ let project = Project(
             bundleId: "dev.tuist.NetworkLayerTests",
             infoPlist: .default,
             buildableFolders: [
-                "modules/NetworkLayer/NetworkLayerTest",
+                "modules/NetworkLayer/NetworkLayerTest"
             ],
             dependencies: [.target(name: "NetworkLayer")]
         ),

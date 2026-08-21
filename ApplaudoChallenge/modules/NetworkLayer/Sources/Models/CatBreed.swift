@@ -4,7 +4,7 @@ public struct CatBreed: Decodable, Hashable, Identifiable {
     public let id: String
     public let name: String
     public let description: String
-    public let origin: String
+    public let origin: String?
     public let temperament: String
     public let lifeSpan: String
     public let weight: Weight
@@ -22,12 +22,12 @@ public struct CatBreed: Decodable, Hashable, Identifiable {
     }
 }
 
-public extension CatBreed {
-    var imageURL: URL? {
+extension CatBreed {
+    public var imageURL: URL? {
         referenceImageId.flatMap { URL(string: "https://cdn2.thecatapi.com/images/\($0).jpg") }
     }
 
-    var temperamentTraits: [String] {
+    public var temperamentTraits: [String] {
         temperament
             .split(separator: ",")
             .map { $0.trimmingCharacters(in: .whitespaces) }

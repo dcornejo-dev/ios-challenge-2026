@@ -42,6 +42,13 @@ enum AppTheme {
         static let small: CGFloat = 8
         static let medium: CGFloat = 12
         static let large: CGFloat = 16
+        static let pill: CGFloat = .infinity
+    }
+
+    // MARK: - Animation
+
+    enum Animation {
+        static let standard: Double = 0.15
     }
 }
 
@@ -52,23 +59,28 @@ extension Color {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0
         Scanner(string: hex).scanHexInt64(&int)
-        let r, g, b: Double
+        let r: Double
+        let g: Double
+        let b: Double
         switch hex.count {
         case 6:
             r = Double((int >> 16) & 0xFF) / 255
             g = Double((int >> 8) & 0xFF) / 255
             b = Double(int & 0xFF) / 255
         default:
-            r = 1; g = 1; b = 1
+            r = 1
+            g = 1
+            b = 1
         }
         self.init(red: r, green: g, blue: b)
     }
 
     init(light: Color, dark: Color) {
-        self.init(uiColor: UIColor { traits in
-            traits.userInterfaceStyle == .dark
-                ? UIColor(dark)
-                : UIColor(light)
-        })
+        self.init(
+            uiColor: UIColor { traits in
+                traits.userInterfaceStyle == .dark
+                    ? UIColor(dark)
+                    : UIColor(light)
+            })
     }
 }

@@ -8,8 +8,14 @@ struct AppButton: View {
         case destructive
     }
 
+    enum Shape {
+        case rounded
+        case pill
+    }
+
     let title: String
     var style: Style = .primary
+    var shape: Shape = .rounded
     var isEnabled: Bool = true
     var isLoading: Bool = false
     let action: () -> Void
@@ -35,15 +41,15 @@ struct AppButton: View {
             .padding(.horizontal, AppTheme.Spacing.lg)
             .background(backgroundColor)
             .foregroundColor(foregroundColor)
-            .clipShape(RoundedRectangle(cornerRadius: AppTheme.CornerRadius.medium))
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
             .overlay(
-                RoundedRectangle(cornerRadius: AppTheme.CornerRadius.medium)
+                RoundedRectangle(cornerRadius: cornerRadius)
                     .stroke(borderColor, lineWidth: style == .secondary ? 2 : 0)
             )
         }
         .opacity(isEnabled ? 1.0 : 0.5)
         .scaleEffect(isPressed ? 0.96 : 1.0)
-        .animation(.easeInOut(duration: 0.15), value: isPressed)
+        .animation(.easeInOut(duration: AppTheme.Animation.standard), value: isPressed)
         .simultaneousGesture(
             DragGesture(minimumDistance: 0)
                 .onChanged { _ in isPressed = true }
@@ -53,6 +59,13 @@ struct AppButton: View {
     }
 
     // MARK: - Style Helpers
+
+    private var cornerRadius: CGFloat {
+        switch shape {
+        case .rounded: return AppTheme.CornerRadius.medium
+        case .pill: return AppTheme.CornerRadius.pill
+        }
+    }
 
     private var backgroundColor: Color {
         switch style {
@@ -88,6 +101,7 @@ struct AppButton: View {
         AppButton(title: "Destructive Button", style: .destructive) {}
         AppButton(title: "Disabled Button", style: .primary, isEnabled: false) {}
         AppButton(title: "Loading...", style: .primary, isLoading: true) {}
+        AppButton(title: "Pill Button", style: .primary, shape: .pill) {}
     }
     .padding(AppTheme.Spacing.lg)
 }

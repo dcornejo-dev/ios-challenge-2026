@@ -1,5 +1,5 @@
-import SwiftUI
 import NetworkLayer
+import SwiftUI
 
 struct CatDetailView: View {
 
@@ -54,7 +54,9 @@ struct CatDetailView: View {
     private var detailSections: some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.lg) {
             textSection(title: "Description", systemImage: "text.alignleft", text: breed.description)
-            textSection(title: "Origin", systemImage: "globe", text: breed.origin)
+            if let origin = breed.origin {
+                textSection(title: "Origin", systemImage: "globe", text: origin)
+            }
             temperamentSection
             textSection(title: "Life Span", systemImage: "heart", text: "\(breed.lifeSpan) years")
         }
@@ -88,9 +90,9 @@ struct CatDetailView: View {
 }
 
 #if DEBUG
-#Preview("Cat Detail View") {
-    NavigationStack {
-        CatDetailView(breed: .preview)
+    #Preview("Cat Detail View"){
+        NavigationStack {
+            CatDetailView(breed: .preview)
+        }
     }
-}
 #endif
