@@ -4,6 +4,7 @@ import SwiftUI
 struct AddCatStepperView: View {
     @Environment(\.modelContext) private var modelContext
     @StateObject private var viewModel = AddCatViewModel()
+    @Binding var selectedTab: Int
 
     var body: some View {
         VStack(spacing: 0) {
@@ -97,6 +98,7 @@ struct AddCatStepperView: View {
                 }
 
                 AppButton(title: "Done", style: .secondary) {
+                    selectedTab = 1
                     viewModel.reset()
                 }
             }
@@ -108,7 +110,7 @@ struct AddCatStepperView: View {
 
 #Preview{
     NavigationStack {
-        AddCatStepperView()
+        AddCatStepperView(selectedTab: .constant(2))
     }
     .modelContainer(for: RegisteredCat.self, inMemory: true)
 }
