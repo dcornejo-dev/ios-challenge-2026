@@ -90,7 +90,7 @@ struct CatDetailView: View {
 }
 
 #if DEBUG
-    #Preview("Cat Detail View") {
+    #Preview("Cat Detail View"){
         NavigationStack {
             CatDetailView(breed: .preview)
         }

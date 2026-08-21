@@ -43,7 +43,8 @@ struct AddCatBasicInfoView: View {
         VStack(spacing: AppTheme.Spacing.sm) {
             PhotosPicker(selection: $selectedPhotoItem, matching: .images) {
                 if let photoData = viewModel.photo,
-                   let uiImage = UIImage(data: photoData) {
+                    let uiImage = UIImage(data: photoData)
+                {
                     Image(uiImage: uiImage)
                         .resizable()
                         .scaledToFill()
@@ -70,8 +71,9 @@ struct AddCatBasicInfoView: View {
             .onChange(of: selectedPhotoItem) {
                 Task {
                     if let data = try? await selectedPhotoItem?.loadTransferable(type: Data.self),
-                       let uiImage = UIImage(data: data),
-                       let compressed = uiImage.jpegData(compressionQuality: 0.7) {
+                        let uiImage = UIImage(data: data),
+                        let compressed = uiImage.jpegData(compressionQuality: 0.7)
+                    {
                         viewModel.photo = compressed
                     }
                 }

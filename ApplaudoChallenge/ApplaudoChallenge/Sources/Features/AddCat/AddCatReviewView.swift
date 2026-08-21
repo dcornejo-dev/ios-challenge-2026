@@ -14,7 +14,8 @@ struct AddCatReviewView: View {
                 )
 
                 if let photoData = viewModel.photo,
-                   let uiImage = UIImage(data: photoData) {
+                    let uiImage = UIImage(data: photoData)
+                {
                     Image(uiImage: uiImage)
                         .resizable()
                         .scaledToFill()
@@ -30,7 +31,8 @@ struct AddCatReviewView: View {
                 reviewRow(title: "Description", value: viewModel.shortDescription, icon: "text.alignleft")
 
                 if !viewModel.color.isEmpty,
-                   let color = CatColor(rawValue: viewModel.color) {
+                    let color = CatColor(rawValue: viewModel.color)
+                {
                     reviewRow(title: "Coat Color", value: color.displayName, icon: "paintpalette")
                 }
 

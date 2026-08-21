@@ -106,7 +106,7 @@ struct AddCatStepperView: View {
     }
 }
 
-#Preview {
+#Preview{
     NavigationStack {
         AddCatStepperView()
     }
