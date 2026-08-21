@@ -80,6 +80,19 @@ struct AddCatViewModelTests {
         #expect(vm.step1Errors["name"] != nil)
     }
 
+    @Test("step 1 fails with name longer than 30 characters (31 chars)")
+    func step1NameTooLong() {
+        let vm = makeViewModel()
+        vm.name = String(repeating: "a", count: 31)
+        vm.breedName = "Bengal"
+        vm.breedId = "beng"
+
+        let advanced = vm.validateAndAdvance()
+
+        #expect(!advanced)
+        #expect(vm.step1Errors["name"] != nil)
+    }
+
     @Test("step 1 fails with no breed selected")
     func step1NoBreed() {
         let vm = makeViewModel()
@@ -102,10 +115,24 @@ struct AddCatViewModelTests {
         #expect(vm.step1Errors["breed"] != nil)
     }
 
-    @Test("step 1 advances with valid name (exactly 2 chars) and breed")
-    func step1ValidBoundary() {
+    @Test("step 1 advances with name of exactly 2 characters (lower boundary)")
+    func step1NameLowerBoundary() {
         let vm = makeViewModel()
         vm.name = "Mo"
+        vm.breedName = "Bengal"
+        vm.breedId = "beng"
+
+        let advanced = vm.validateAndAdvance()
+
+        #expect(advanced)
+        #expect(vm.currentStep == 1)
+        #expect(vm.step1Errors.isEmpty)
+    }
+
+    @Test("step 1 advances with name of exactly 30 characters (upper boundary)")
+    func step1NameUpperBoundary() {
+        let vm = makeViewModel()
+        vm.name = String(repeating: "a", count: 30)
         vm.breedName = "Bengal"
         vm.breedId = "beng"
 
@@ -198,18 +225,8 @@ struct AddCatViewModelTests {
         let vm = advanceToStep2()
         vm.age = "abc"
         vm.shortDescription = "A lovely cat indeed"
-
-        let advanced = vm.validateAndAdvance()
-
-        #expect(!advanced)
-        #expect(vm.step2Errors["age"] != nil)
-    }
-
-    @Test("step 2 fails with age 0")
-    func step2AgeZero() {
-        let vm = advanceToStep2()
-        vm.age = "0"
-        vm.shortDescription = "A lovely cat indeed"
+        vm.color = CatColor.black.rawValue
+        vm.gender = .female
 
         let advanced = vm.validateAndAdvance()
 
@@ -222,6 +239,8 @@ struct AddCatViewModelTests {
         let vm = advanceToStep2()
         vm.age = "31"
         vm.shortDescription = "A lovely cat indeed"
+        vm.color = CatColor.black.rawValue
+        vm.gender = .female
 
         let advanced = vm.validateAndAdvance()
 
@@ -229,11 +248,42 @@ struct AddCatViewModelTests {
         #expect(vm.step2Errors["age"] != nil)
     }
 
+    @Test("step 2 advances with age 0 (kittens under 1 year, lower boundary)")
+    func step2AgeZero() {
+        let vm = advanceToStep2()
+        vm.age = "0"
+        vm.shortDescription = "A lovely cat indeed"
+        vm.color = CatColor.black.rawValue
+        vm.gender = .female
+
+        let advanced = vm.validateAndAdvance()
+
+        #expect(advanced)
+        #expect(vm.currentStep == 2)
+        #expect(vm.step2Errors.isEmpty)
+    }
+
+    @Test("step 2 advances with age 30 (upper boundary)")
+    func step2AgeUpperBoundary() {
+        let vm = advanceToStep2()
+        vm.age = "30"
+        vm.shortDescription = "A lovely cat indeed"
+        vm.color = CatColor.black.rawValue
+        vm.gender = .male
+
+        let advanced = vm.validateAndAdvance()
+
+        #expect(advanced)
+        #expect(vm.currentStep == 2)
+    }
+
     @Test("step 2 fails with short description")
     func step2ShortDescription() {
         let vm = advanceToStep2()
         vm.age = "5"
         vm.shortDescription = "Short"
+        vm.color = CatColor.black.rawValue
+        vm.gender = .female
 
         let advanced = vm.validateAndAdvance()
 
@@ -246,6 +296,8 @@ struct AddCatViewModelTests {
         let vm = advanceToStep2()
         vm.age = "5"
         vm.shortDescription = "          "
+        vm.color = CatColor.black.rawValue
+        vm.gender = .female
 
         let advanced = vm.validateAndAdvance()
 
@@ -253,11 +305,27 @@ struct AddCatViewModelTests {
         #expect(vm.step2Errors["shortDescription"] != nil)
     }
 
-    @Test("step 2 advances with valid age (boundary 1) and description (boundary 10 chars)")
-    func step2ValidBoundary() {
+    @Test("step 2 fails with description longer than 200 characters (201 chars)")
+    func step2DescriptionTooLong() {
         let vm = advanceToStep2()
-        vm.age = "1"
+        vm.age = "5"
+        vm.shortDescription = String(repeating: "a", count: 201)
+        vm.color = CatColor.black.rawValue
+        vm.gender = .female
+
+        let advanced = vm.validateAndAdvance()
+
+        #expect(!advanced)
+        #expect(vm.step2Errors["shortDescription"] != nil)
+    }
+
+    @Test("step 2 advances with description of exactly 10 characters (lower boundary)")
+    func step2DescriptionLowerBoundary() {
+        let vm = advanceToStep2()
+        vm.age = "5"
         vm.shortDescription = "Exactly 10"
+        vm.color = CatColor.black.rawValue
+        vm.gender = .female
 
         let advanced = vm.validateAndAdvance()
 
@@ -266,16 +334,88 @@ struct AddCatViewModelTests {
         #expect(vm.step2Errors.isEmpty)
     }
 
-    @Test("step 2 advances with age 30 (upper boundary)")
-    func step2ValidUpperBoundary() {
+    @Test("step 2 advances with description of exactly 200 characters (upper boundary)")
+    func step2DescriptionUpperBoundary() {
         let vm = advanceToStep2()
-        vm.age = "30"
-        vm.shortDescription = "A lovely cat indeed"
+        vm.age = "5"
+        vm.shortDescription = String(repeating: "a", count: 200)
+        vm.color = CatColor.black.rawValue
+        vm.gender = .female
 
         let advanced = vm.validateAndAdvance()
 
         #expect(advanced)
         #expect(vm.currentStep == 2)
+    }
+
+    @Test("step 2 fails with empty color")
+    func step2EmptyColor() {
+        let vm = advanceToStep2()
+        vm.age = "5"
+        vm.shortDescription = "A lovely friendly cat"
+        vm.gender = .female
+        // color left empty
+
+        let advanced = vm.validateAndAdvance()
+
+        #expect(!advanced)
+        #expect(vm.step2Errors["color"] != nil)
+    }
+
+    @Test("step 2 advances with non-empty color")
+    func step2NonEmptyColor() {
+        let vm = advanceToStep2()
+        vm.age = "5"
+        vm.shortDescription = "A lovely friendly cat"
+        vm.color = CatColor.tabby.rawValue
+        vm.gender = .female
+
+        let advanced = vm.validateAndAdvance()
+
+        #expect(advanced)
+        #expect(vm.step2Errors["color"] == nil)
+    }
+
+    @Test("step 2 fails with nil gender")
+    func step2NilGender() {
+        let vm = advanceToStep2()
+        vm.age = "5"
+        vm.shortDescription = "A lovely friendly cat"
+        vm.color = CatColor.black.rawValue
+        // gender left nil
+
+        let advanced = vm.validateAndAdvance()
+
+        #expect(!advanced)
+        #expect(vm.step2Errors["gender"] != nil)
+    }
+
+    @Test("step 2 advances with gender .male")
+    func step2GenderMale() {
+        let vm = advanceToStep2()
+        vm.age = "5"
+        vm.shortDescription = "A lovely friendly cat"
+        vm.color = CatColor.black.rawValue
+        vm.gender = .male
+
+        let advanced = vm.validateAndAdvance()
+
+        #expect(advanced)
+        #expect(vm.step2Errors["gender"] == nil)
+    }
+
+    @Test("step 2 advances with gender .female")
+    func step2GenderFemale() {
+        let vm = advanceToStep2()
+        vm.age = "5"
+        vm.shortDescription = "A lovely friendly cat"
+        vm.color = CatColor.black.rawValue
+        vm.gender = .female
+
+        let advanced = vm.validateAndAdvance()
+
+        #expect(advanced)
+        #expect(vm.step2Errors["gender"] == nil)
     }
 
     @Test("clearing step 2 age error removes only that error")
@@ -292,6 +432,63 @@ struct AddCatViewModelTests {
         #expect(vm.step2Errors["shortDescription"] != nil)
     }
 
+    // MARK: - hasUnsavedData
+
+    @Test("hasUnsavedData is false on a fresh view model")
+    func hasUnsavedDataFresh() {
+        let vm = makeViewModel()
+        #expect(!vm.hasUnsavedData)
+    }
+
+    @Test("hasUnsavedData is true when name is set")
+    func hasUnsavedDataName() {
+        let vm = makeViewModel()
+        vm.name = "W"
+        #expect(vm.hasUnsavedData)
+    }
+
+    @Test("hasUnsavedData is true when breed is set")
+    func hasUnsavedDataBreed() {
+        let vm = makeViewModel()
+        vm.breedName = "Bengal"
+        #expect(vm.hasUnsavedData)
+    }
+
+    @Test("hasUnsavedData is true when age is set")
+    func hasUnsavedDataAge() {
+        let vm = makeViewModel()
+        vm.age = "3"
+        #expect(vm.hasUnsavedData)
+    }
+
+    @Test("hasUnsavedData is true when description is set")
+    func hasUnsavedDataDescription() {
+        let vm = makeViewModel()
+        vm.shortDescription = "hi"
+        #expect(vm.hasUnsavedData)
+    }
+
+    @Test("hasUnsavedData is true when color is set")
+    func hasUnsavedDataColor() {
+        let vm = makeViewModel()
+        vm.color = CatColor.black.rawValue
+        #expect(vm.hasUnsavedData)
+    }
+
+    @Test("hasUnsavedData is true when gender is set")
+    func hasUnsavedDataGender() {
+        let vm = makeViewModel()
+        vm.gender = .female
+        #expect(vm.hasUnsavedData)
+    }
+
+    @Test("hasUnsavedData is true when photo is set")
+    func hasUnsavedDataPhoto() {
+        let vm = makeViewModel()
+        vm.photo = Data([0x01])
+        #expect(vm.hasUnsavedData)
+    }
+
     // MARK: - Save
 
     @Test("save creates a RegisteredCat with correct fields")
@@ -305,6 +502,8 @@ struct AddCatViewModelTests {
         let vm = advanceToStep2()
         vm.age = "5"
         vm.shortDescription = "A lovely friendly cat"
+        vm.color = CatColor.tabby.rawValue
+        vm.gender = .female
         _ = vm.validateAndAdvance()
 
         vm.save(context: context)
@@ -321,8 +520,8 @@ struct AddCatViewModelTests {
         #expect(cat.breedId == "beng")
         #expect(cat.age == 5)
         #expect(cat.shortDescription == "A lovely friendly cat")
-        #expect(cat.color == "")
-        #expect(cat.gender == CatGender.unknown.rawValue)
+        #expect(cat.color == CatColor.tabby.rawValue)
+        #expect(cat.gender == CatGender.female.rawValue)
     }
 
     // MARK: - Reset
@@ -332,6 +531,9 @@ struct AddCatViewModelTests {
         let vm = advanceToStep2()
         vm.age = "5"
         vm.shortDescription = "A lovely friendly cat"
+        vm.color = CatColor.tabby.rawValue
+        vm.gender = .female
+        vm.photo = Data([0x01])
         _ = vm.validateAndAdvance()
 
         vm.reset()
@@ -342,6 +544,8 @@ struct AddCatViewModelTests {
         #expect(vm.breedId.isEmpty)
         #expect(vm.age.isEmpty)
         #expect(vm.shortDescription.isEmpty)
+        #expect(vm.color.isEmpty)
+        #expect(vm.gender == nil)
         #expect(vm.photo == nil)
         #expect(vm.step1Errors.isEmpty)
         #expect(vm.step2Errors.isEmpty)

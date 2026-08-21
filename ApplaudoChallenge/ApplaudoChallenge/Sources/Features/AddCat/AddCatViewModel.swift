@@ -9,7 +9,6 @@ final class AddCatViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     static let totalSteps = 3
-    static let stepTitles = ["Basic Info", "Details", "Review"]
 
     @Published var currentStep = 0
     @Published var name = ""
@@ -17,11 +16,24 @@ final class AddCatViewModel: ObservableObject {
     @Published var breedId = ""
     @Published var age = ""
     @Published var shortDescription = ""
+    @Published var color: String = ""
+    @Published var gender: CatGender?
     @Published var photo: Data?
     @Published var breedsState: ViewState<[CatBreed]> = .idle
     @Published var step1Errors: [String: String] = [:]
     @Published var step2Errors: [String: String] = [:]
     @Published var isSaved = false
+
+    // MARK: - Computed Properties
+    var hasUnsavedData: Bool {
+        !name.isEmpty
+            || !breedName.isEmpty
+            || !age.isEmpty
+            || !shortDescription.isEmpty
+            || !color.isEmpty
+            || gender != nil
+            || photo != nil
+    }
 
     // MARK: - Initializers
     init(service: CatBreedsServiceType = CatBreedsService()) {
@@ -63,7 +75,7 @@ final class AddCatViewModel: ObservableObject {
     }
 
     func save(context: ModelContext) {
-        guard let ageInt = Int(age) else { return }
+        guard let ageInt = Int(age), let gender else { return }
 
         let cat = RegisteredCat(
             name: name.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -71,8 +83,8 @@ final class AddCatViewModel: ObservableObject {
             breedId: breedId,
             age: ageInt,
             shortDescription: shortDescription.trimmingCharacters(in: .whitespacesAndNewlines),
-            color: "",
-            gender: .unknown,
+            color: color,
+            gender: gender,
             photo: photo
         )
         context.insert(cat)
@@ -86,6 +98,8 @@ final class AddCatViewModel: ObservableObject {
         breedId = ""
         age = ""
         shortDescription = ""
+        color = ""
+        gender = nil
         photo = nil
         step1Errors = [:]
         step2Errors = [:]
@@ -105,11 +119,11 @@ final class AddCatViewModel: ObservableObject {
         step1Errors = [:]
 
         let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        if trimmedName.count < 2 {
-            step1Errors["name"] = "Name must be at least 2 characters"
+        if trimmedName.count < 2 || trimmedName.count > 30 {
+            step1Errors["name"] = "Name must be 2–30 characters."
         }
         if breedName.isEmpty {
-            step1Errors["breed"] = "Please select a breed"
+            step1Errors["breed"] = "Please select a breed."
         }
 
         if step1Errors.isEmpty {
@@ -122,15 +136,23 @@ final class AddCatViewModel: ObservableObject {
     private func validateStep2() -> Bool {
         step2Errors = [:]
 
-        if let ageInt = Int(age), ageInt >= 1, ageInt <= 30 {
+        if let ageInt = Int(age), ageInt >= 0, ageInt <= 30 {
             // valid
         } else {
-            step2Errors["age"] = "Age must be a number between 1 and 30"
+            step2Errors["age"] = "Age must be a whole number between 0 and 30."
         }
 
         let trimmedDesc = shortDescription.trimmingCharacters(in: .whitespacesAndNewlines)
-        if trimmedDesc.count < 10 {
-            step2Errors["shortDescription"] = "Description must be at least 10 characters"
+        if trimmedDesc.count < 10 || trimmedDesc.count > 200 {
+            step2Errors["shortDescription"] = "Description must be 10–200 characters."
+        }
+
+        if color.isEmpty {
+            step2Errors["color"] = "Please select a color."
+        }
+
+        if gender == nil {
+            step2Errors["gender"] = "Please select a gender."
         }
 
         if step2Errors.isEmpty {

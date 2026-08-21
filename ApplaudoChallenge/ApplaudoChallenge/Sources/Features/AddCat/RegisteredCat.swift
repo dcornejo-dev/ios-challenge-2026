@@ -2,7 +2,7 @@ import Foundation
 import SwiftData
 
 enum CatGender: String, CaseIterable, Codable {
-    case male, female, unknown
+    case male, female
 
     var displayName: String {
         rawValue.capitalized
