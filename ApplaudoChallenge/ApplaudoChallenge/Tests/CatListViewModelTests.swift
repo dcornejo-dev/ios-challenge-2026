@@ -4,7 +4,7 @@ import Combine
 @testable import ApplaudoChallenge
 import NetworkLayer
 
-struct MockCatBreedsService: CatBreedsServiceProtocol {
+struct MockCatBreedsService: CatBreedsServiceType {
     var resultProvider: () -> Result<[CatBreed], NetworkError>
 
     init(result: Result<[CatBreed], NetworkError>) {

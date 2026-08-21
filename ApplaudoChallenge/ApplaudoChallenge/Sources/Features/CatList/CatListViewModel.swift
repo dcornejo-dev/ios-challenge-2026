@@ -3,17 +3,20 @@ import Combine
 import NetworkLayer
 
 final class CatListViewModel: ObservableObject {
-    @Published private(set) var state: ViewState<[CatBreed]> = .idle
-
-    private let service: CatBreedsServiceProtocol
+    // MARK: - Properties
+    private let service: CatBreedsServiceType
     private var cancellables = Set<AnyCancellable>()
     private var currentPage = 0
     private let pageSize = 10
 
-    init(service: CatBreedsServiceProtocol = CatBreedsService()) {
+    @Published private(set) var state: ViewState<[CatBreed]> = .idle
+
+    // MARK: - Initializers
+    init(service: CatBreedsServiceType = CatBreedsService()) {
         self.service = service
     }
 
+    // MARK: - Public Methods
     func fetchBreeds() {
         state = .loading
 

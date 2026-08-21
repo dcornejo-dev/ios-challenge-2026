@@ -13,10 +13,7 @@ extension CatBreedsTarget: NetworkingTargetType {
     }
 
     var requestMethod: RequestMethod {
-        switch self {
-        case .getBreeds:
-            return .get
-        }
+        .get
     }
 
     var task: Moya.Task {
