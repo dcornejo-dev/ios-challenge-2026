@@ -5,9 +5,9 @@
 //  Created by Christian Rivera on 25/3/26.
 //
 
+import Combine
 import Foundation
 import Moya
-import Combine
 
 // MARK: - Network Error
 /// Lightweight domain error type that wraps common networking failures.
@@ -56,29 +56,31 @@ struct NetworkingRequester: NetworkingRequesterType {
 
     func execute(request: NetworkingTargetType) -> AnyPublisher<Data, NetworkError> {
         var task: Moya.Cancellable?
-        let provider = provider // Captured locally to avoid reference issues inside the closure.
+        let provider = provider  // Captured locally to avoid reference issues inside the closure.
 
         // Wrap the callback-based Moya API in a Combine Future so callers get a single-value publisher.
-        return Deferred { Future { seal in
-            // Store the cancellable so it can be cancelled later if the subscriber disposes.
-            task = provider.request(MultiTarget(request)) { result in
-                switch result {
-                case .success(let response):
-                    let statusCode = response.statusCode
+        return Deferred {
+            Future { seal in
+                // Store the cancellable so it can be cancelled later if the subscriber disposes.
+                task = provider.request(MultiTarget(request)) { result in
+                    switch result {
+                    case .success(let response):
+                        let statusCode = response.statusCode
 
-                    // Reject any response outside the 2XX range as a server error.
-                    guard (200...299).contains(statusCode) else {
-                        seal(.failure(.serverError(statusCode: statusCode, data: response.data)))
-                        return
+                        // Reject any response outside the 2XX range as a server error.
+                        guard (200...299).contains(statusCode) else {
+                            seal(.failure(.serverError(statusCode: statusCode, data: response.data)))
+                            return
+                        }
+
+                        seal(.success(response.data))
+                    case .failure(let error):
+                        // Moya-level failures (e.g. no connection) map to the generic domain error.
+                        seal(.failure(.unknown(underlying: error)))
                     }
-
-                    seal(.success(response.data))
-                case .failure(let error):
-                    // Moya-level failures (e.g. no connection) map to the generic domain error.
-                    seal(.failure(.unknown(underlying: error)))
                 }
             }
-        }}
+        }
         // Propagate Combine cancellation back to the in-flight Moya task.
         .handleEvents(receiveCancel: { task?.cancel() })
         .eraseToAnyPublisher()
@@ -96,7 +98,7 @@ extension NetworkingRequesterType {
         request: NetworkingTargetType,
         using decoder: JSONDecoder = .init()
     ) -> AnyPublisher<T, NetworkError> {
-        execute(request: request) // Reuse the raw-data publisher.
+        execute(request: request)  // Reuse the raw-data publisher.
             .decode(type: T.self, decoder: decoder)
             .mapError { error in
                 // Preserve any NetworkError that passed through; wrap all others as decoding failures.
@@ -109,4 +111,3 @@ extension NetworkingRequesterType {
             .eraseToAnyPublisher()
     }
 }
-

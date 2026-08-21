@@ -1,5 +1,5 @@
-import SwiftUI
 import NetworkLayer
+import SwiftUI
 
 struct CatDetailView: View {
 
@@ -88,9 +88,9 @@ struct CatDetailView: View {
 }
 
 #if DEBUG
-#Preview("Cat Detail View") {
-    NavigationStack {
-        CatDetailView(breed: .preview)
+    #Preview("Cat Detail View") {
+        NavigationStack {
+            CatDetailView(breed: .preview)
+        }
     }
-}
 #endif

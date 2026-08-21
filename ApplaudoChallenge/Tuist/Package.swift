@@ -15,6 +15,6 @@ import PackageDescription
 let package = Package(
     name: "ApplaudoChallenge",
     dependencies: [
-        .package(url: "https://github.com/Moya/Moya", from: "15.0.0"),
+        .package(url: "https://github.com/Moya/Moya", from: "15.0.0")
     ]
 )

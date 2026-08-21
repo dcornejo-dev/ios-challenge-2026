@@ -23,7 +23,7 @@ extension CatInformationTarget: NetworkingTargetType {
     var requestPath: String {
         switch self {
         case .getCatImage:
-            return "images/search" // Full URL: https://api.thecatapi.com/v1/images/search
+            return "images/search"  // Full URL: https://api.thecatapi.com/v1/images/search
         }
     }
 

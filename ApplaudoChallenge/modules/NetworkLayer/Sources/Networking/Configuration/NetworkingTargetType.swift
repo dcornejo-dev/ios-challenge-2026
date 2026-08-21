@@ -16,7 +16,7 @@ protocol NetworkingTargetType: TargetType {
     var requestPath: String { get }
     var requestHeaders: [String: String]? { get }
     var requestMethod: RequestMethod { get }
-    var requestSampleData: Data { get } // Return representative mock JSON for unit tests.
+    var requestSampleData: Data { get }  // Return representative mock JSON for unit tests.
     var cachePolicy: URLRequest.CachePolicy { get }
 }
 
@@ -35,7 +35,7 @@ extension NetworkingTargetType {
     var requestHeaders: [String: String]? {
         [
             "Content-Type": "application/json",
-            "x-api-key": "live_gr68UfzuHpuvImA0SLXZPRwZLVr6l3kqBGXT366W0njfncfwTiAFuHovyzXpLfUn"
+            "x-api-key": "live_gr68UfzuHpuvImA0SLXZPRwZLVr6l3kqBGXT366W0njfncfwTiAFuHovyzXpLfUn",
         ]
     }
 
@@ -82,11 +82,11 @@ extension NetworkingTargetType {
     }
 
     var validationType: ValidationType {
-        .successCodes // Only 2XX status codes are treated as successful responses.
+        .successCodes  // Only 2XX status codes are treated as successful responses.
     }
 
     var cachePolicy: URLRequest.CachePolicy {
-        .reloadIgnoringLocalCacheData // Always fetch fresh data; bypass the local URL cache.
+        .reloadIgnoringLocalCacheData  // Always fetch fresh data; bypass the local URL cache.
     }
 }
 
@@ -94,8 +94,10 @@ extension NetworkingTargetType {
 /// Convenience helper to encode an `Encodable` model into a `[String: Any]` dictionary,
 /// suitable for use as URL query parameters or a JSON request body task.
 extension NetworkingTargetType {
-    func parametersAsDictionary<T: Encodable>(_ parameters: T,
-                                              with encoder: JSONEncoder = JSONEncoder()) -> [String: Any] {
+    func parametersAsDictionary<T: Encodable>(
+        _ parameters: T,
+        with encoder: JSONEncoder = JSONEncoder()
+    ) -> [String: Any] {
         // Falls back to an empty dictionary if encoding fails — handle this case in your target if needed.
         encoder.encodeAsDictionary(parameters) ?? [:]
     }

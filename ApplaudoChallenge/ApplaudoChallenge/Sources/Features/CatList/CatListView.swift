@@ -1,5 +1,5 @@
-import SwiftUI
 import NetworkLayer
+import SwiftUI
 
 struct CatListView: View {
     @StateObject private var viewModel = CatListViewModel()
