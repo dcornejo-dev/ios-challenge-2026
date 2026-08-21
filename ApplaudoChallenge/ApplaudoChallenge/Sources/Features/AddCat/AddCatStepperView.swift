@@ -108,7 +108,7 @@ struct AddCatStepperView: View {
         case 0:
             AddCatIdentityStep(viewModel: viewModel)
         case 1:
-            AddCatDetailsStep()
+            AddCatDetailsStep(viewModel: viewModel)
         case 2:
             AddCatPhotoStep()
         default:
