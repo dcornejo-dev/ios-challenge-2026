@@ -11,10 +11,10 @@ Cat Breed Explorer — an iOS app (SwiftUI + Combine) built for the Applaudo cod
 | Story | Priority | Status |
 |-------|----------|--------|
 | 1 — Browse Cat Breeds (list with loading/empty/error, tap to detail) | Core | Done |
-| 2 — Cat Breed Details (image, description, origin, temperament, life span) | Core | Not started |
-| 3 — Register a New Cat (multi-step form, local persistence) | Core | Not started |
+| 2 — Cat Breed Details (image, description, origin, temperament, life span) | Core | Done |
+| 3 — Register a New Cat (multi-step form, local persistence) | Core | In progress |
 | 4 — Pagination (infinite scroll on breed list) | Plus | Not started |
-| 5 — Form Validations (inline validation per step) | Plus | Not started |
+| 5 — Form Validations (inline validation per step) | Plus | In progress |
 
 ### Evaluation Criteria
 
@@ -40,14 +40,23 @@ xcodebuild -workspace ApplaudoChallenge.xcworkspace -scheme ApplaudoChallenge -d
 
 ## Feature Development Workflow
 
+### New Screen or Flow
+
 When developing a new feature or story, follow this pipeline in order:
 
 1. `/grill-with-docs` — Discuss and align on every design decision for the story
 2. `/to-spec` — Formalize the grilling output into a specification document
 3. `/to-tickets` — Break the spec into discrete, implementable tickets
 4. `/implement` — Build it ticket by ticket
+5. `/qa` — Audit the built screens in the simulator, flag issues (inconsistencies, layout, accessibility, broken flows)
+6. `/design-an-interface` — Only if the audit escalates a finding from "fix this" to "rethink this"
+7. `/implement` — Apply the fixes
 
 Do not skip steps or collapse them. Each step produces an artifact that the next step consumes.
+
+### Existing Screen or Flow Review
+
+When auditing or reviewing screens and flows that are already built, start at step 5 of the pipeline above.
 
 ## Architecture Decisions
 
