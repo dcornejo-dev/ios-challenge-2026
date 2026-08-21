@@ -24,7 +24,7 @@ struct MyCatsView: View {
             .navigationDestination(for: RegisteredCat.self) { cat in
                 RegisteredCatDetailView(cat: cat)
             }
-            .sheet(isPresented: $showRegistrationSheet) {
+            .fullScreenCover(isPresented: $showRegistrationSheet) {
                 viewModel.fetchCats(context: modelContext)
             } content: {
                 AddCatStepperView()
