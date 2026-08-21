@@ -6,13 +6,15 @@ struct AppCard: View {
     var subtitle: String = ""
     var imageSystemName: String = "photo"
     var imageData: Data? = nil
+    var imageURL: URL? = nil
     var showChevron: Bool = true
 
     var body: some View {
-        HStack(spacing: AppTheme.Spacing.md) {
-            iconView
+        HStack(spacing: 0) {
+            leadingVisual
+                .frame(width: 100)
+                .clipped()
 
-            // Text Content
             VStack(alignment: .leading, spacing: AppTheme.Spacing.xs) {
                 Text(title)
                     .font(AppTheme.Fonts.headline)
@@ -24,38 +26,49 @@ struct AppCard: View {
                         .foregroundColor(AppTheme.Colors.textSecondary)
                 }
             }
+            .padding(.horizontal, AppTheme.Spacing.md)
+            .padding(.vertical, AppTheme.Spacing.md)
 
             Spacer()
 
-            // Chevron
             if showChevron {
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundColor(AppTheme.Colors.textSecondary)
+                    .padding(.trailing, AppTheme.Spacing.md)
             }
         }
-        .padding(AppTheme.Spacing.md)
+        .frame(minHeight: 120)
         .background(AppTheme.Colors.surface)
         .clipShape(RoundedRectangle(cornerRadius: AppTheme.CornerRadius.medium))
         .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
     }
 
     @ViewBuilder
-    private var iconView: some View {
+    private var leadingVisual: some View {
         if let imageData, let uiImage = UIImage(data: imageData) {
             Image(uiImage: uiImage)
                 .resizable()
                 .scaledToFill()
-                .frame(width: 50, height: 50)
-                .clipShape(Circle())
+        } else if let imageURL {
+            CachedAsyncImage(url: imageURL) { image in
+                image
+                    .resizable()
+                    .scaledToFill()
+            } placeholder: {
+                imagePlaceholder
+            }
         } else {
-            Image(systemName: imageSystemName)
-                .font(.title2)
-                .foregroundColor(AppTheme.Colors.primary)
-                .frame(width: 50, height: 50)
-                .background(AppTheme.Colors.primary.opacity(0.1))
-                .clipShape(Circle())
+            imagePlaceholder
         }
+    }
+
+    private var imagePlaceholder: some View {
+        Image(systemName: imageSystemName)
+            .font(.title2)
+            .foregroundColor(AppTheme.Colors.primary)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(AppTheme.Colors.primary.opacity(0.1))
     }
 }
 

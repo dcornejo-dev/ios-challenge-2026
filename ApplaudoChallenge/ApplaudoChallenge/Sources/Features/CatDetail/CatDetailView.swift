@@ -21,19 +21,12 @@ struct CatDetailView: View {
             .aspectRatio(4 / 3, contentMode: .fit)
             .overlay {
                 if let imageURL = breed.imageURL {
-                    AsyncImage(url: imageURL) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        case .failure:
-                            imagePlaceholder
-                        case .empty:
-                            ProgressView()
-                        @unknown default:
-                            imagePlaceholder
-                        }
+                    CachedAsyncImage(url: imageURL) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    } placeholder: {
+                        imagePlaceholder
                     }
                 } else {
                     imagePlaceholder

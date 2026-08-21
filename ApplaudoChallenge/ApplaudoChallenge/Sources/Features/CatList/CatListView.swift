@@ -40,6 +40,7 @@ struct CatListView: View {
                                 title: breed.name,
                                 subtitle: breed.description,
                                 imageSystemName: "cat",
+                                imageURL: breed.imageURL,
                                 showChevron: true
                             )
                         }
