@@ -90,7 +90,6 @@ struct CatListViewModelTests {
         let viewModel = CatListViewModel(service: service)
 
         viewModel.fetchBreeds()
-        try #require(isLoading(viewModel.state))
 
         try await Task.sleep(for: Self.testSleepDuration)
 

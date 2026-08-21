@@ -14,12 +14,8 @@ public struct ContentView: View {
             }
 
             // MARK: - Tab 2: Add Cat
-            // TODO: Replace placeholder with your AddCatStepperView
             NavigationStack {
-                Text("Add New Cat")
-                    .font(AppTheme.Fonts.title)
-                    .foregroundColor(AppTheme.Colors.textPrimary)
-                    .navigationTitle("Add Cat")
+                AddCatStepperView()
             }
             .tabItem {
                 Label("Add Cat", systemImage: "plus.circle")

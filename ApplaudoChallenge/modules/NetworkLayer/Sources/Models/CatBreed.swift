@@ -4,7 +4,7 @@ public struct CatBreed: Decodable, Hashable, Identifiable {
     public let id: String
     public let name: String
     public let description: String
-    public let origin: String
+    public let origin: String?
     public let temperament: String
     public let lifeSpan: String
     public let weight: Weight
