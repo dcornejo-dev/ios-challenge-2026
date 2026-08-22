@@ -148,6 +148,11 @@ struct AddCatStepperView: View {
             forwardDirection = true
             _ = viewModel.validateAndAdvance()
         case 2:
+            guard viewModel.canSave else {
+                forwardDirection = false
+                viewModel.jumpToFirstInvalidStep()
+                return
+            }
             viewModel.save(context: modelContext)
         default:
             break
