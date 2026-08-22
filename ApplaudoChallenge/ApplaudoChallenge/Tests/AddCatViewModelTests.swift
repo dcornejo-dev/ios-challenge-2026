@@ -248,10 +248,24 @@ struct AddCatViewModelTests {
         #expect(vm.step2Errors["age"] != nil)
     }
 
-    @Test("step 2 advances with age 0 (kittens under 1 year, lower boundary)")
+    @Test("step 2 fails with age 0")
     func step2AgeZero() {
         let vm = advanceToStep2()
         vm.age = "0"
+        vm.shortDescription = "A lovely cat indeed"
+        vm.color = CatColor.black.rawValue
+        vm.gender = .female
+
+        let advanced = vm.validateAndAdvance()
+
+        #expect(!advanced)
+        #expect(vm.step2Errors["age"] != nil)
+    }
+
+    @Test("step 2 advances with age 1 (lower boundary)")
+    func step2AgeOne() {
+        let vm = advanceToStep2()
+        vm.age = "1"
         vm.shortDescription = "A lovely cat indeed"
         vm.color = CatColor.black.rawValue
         vm.gender = .female

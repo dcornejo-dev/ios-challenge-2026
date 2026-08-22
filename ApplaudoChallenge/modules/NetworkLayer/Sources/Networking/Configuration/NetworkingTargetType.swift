@@ -32,10 +32,12 @@ extension NetworkingTargetType {
 
     // MARK: - Request Headers
     // Common headers sent with every request. Add or override additional headers in your target as required.
+    // The Cat API key is injected into the app's Info.plist by `Secrets.xcconfig` (see README).
     var requestHeaders: [String: String]? {
-        [
+        let apiKey = (Bundle.main.object(forInfoDictionaryKey: "CAT_API_KEY") as? String) ?? ""
+        return [
             "Content-Type": "application/json",
-            "x-api-key": "live_gr68UfzuHpuvImA0SLXZPRwZLVr6l3kqBGXT366W0njfncfwTiAFuHovyzXpLfUn",
+            "x-api-key": apiKey,
         ]
     }
 
