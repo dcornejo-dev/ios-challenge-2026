@@ -40,6 +40,9 @@ graph.dot
 Derived/
 Tuist/.build
 
+# Local secrets
+ApplaudoChallenge/Secrets.xcconfig
+
 # Ruby
 .ruby-version
 

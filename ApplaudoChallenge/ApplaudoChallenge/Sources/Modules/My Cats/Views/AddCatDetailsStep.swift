@@ -8,13 +8,13 @@ struct AddCatDetailsStep: View {
             FloatingLabelField(
                 label: "Age",
                 text: $viewModel.age,
-                helperText: "In years. Kittens under 1 year → 0.",
+                helperText: "In years, 1–30. Round kittens under 1 year up to 1.",
                 errorMessage: viewModel.step2Errors["age"],
                 keyboardType: .numberPad
             )
             .onChange(of: viewModel.age) { _, _ in
                 guard viewModel.step2Errors["age"] != nil else { return }
-                if let ageInt = Int(viewModel.age), ageInt >= 0, ageInt <= 30 {
+                if let ageInt = Int(viewModel.age), ageInt >= 1, ageInt <= 30 {
                     viewModel.clearStep2Error(for: "age")
                 }
             }

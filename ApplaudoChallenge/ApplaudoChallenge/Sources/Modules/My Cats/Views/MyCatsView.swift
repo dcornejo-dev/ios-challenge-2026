@@ -41,7 +41,7 @@ struct MyCatsView: View {
                 systemImage: "pawprint",
                 title: "No Cats Yet",
                 message: "Register your first cat to see it here.",
-                buttonTitle: "Register a Cat",
+                buttonTitle: "Register",
                 action: { showRegistrationSheet = true }
             )
         } else {

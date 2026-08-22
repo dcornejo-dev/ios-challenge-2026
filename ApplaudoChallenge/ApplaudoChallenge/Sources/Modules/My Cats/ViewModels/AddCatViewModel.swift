@@ -94,7 +94,7 @@ final class AddCatViewModel: ObservableObject {
     }
 
     private var isStep2Valid: Bool {
-        guard let ageInt = Int(age), (0...30).contains(ageInt) else { return false }
+        guard let ageInt = Int(age), (1...30).contains(ageInt) else { return false }
         let trimmedDesc = shortDescription.trimmingCharacters(in: .whitespacesAndNewlines)
         return (10...200).contains(trimmedDesc.count) && !color.isEmpty && gender != nil
     }
@@ -161,10 +161,10 @@ final class AddCatViewModel: ObservableObject {
     private func validateStep2() -> Bool {
         step2Errors = [:]
 
-        if let ageInt = Int(age), ageInt >= 0, ageInt <= 30 {
+        if let ageInt = Int(age), ageInt >= 1, ageInt <= 30 {
             // valid
         } else {
-            step2Errors["age"] = "Age must be a whole number between 0 and 30."
+            step2Errors["age"] = "Age must be a whole number between 1 and 30."
         }
 
         let trimmedDesc = shortDescription.trimmingCharacters(in: .whitespacesAndNewlines)

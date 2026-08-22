@@ -146,7 +146,18 @@ mise use tuist@4.148.1
    ```sh
    tuist fetch
    ```
-3. Generate XCode.proj
+3. Configure your Cat API key
+
+   The app reads the Cat API key from a local, gitignored xcconfig. Copy the template and paste your key:
+
+   ```sh
+   cp ApplaudoChallenge/Secrets.xcconfig.example ApplaudoChallenge/Secrets.xcconfig
+   # then edit ApplaudoChallenge/Secrets.xcconfig and set CAT_API_KEY to your key
+   ```
+
+   The value is baked into the app's `Info.plist` at build time under `CAT_API_KEY` and read at runtime by the `NetworkLayer` module. Get a free key at [The Cat API](https://developers.thecatapi.com/).
+
+4. Generate XCode.proj
    ```sh
    tuist generate
    ```

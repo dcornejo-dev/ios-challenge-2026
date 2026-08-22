@@ -30,7 +30,7 @@ The breed picker inside the stepper asks for up to 100 breeds in a single call. 
 
 Confirmation is a dedicated success screen, not a toast. After a save the stepper swaps its content for `AddCatSuccessView`. Clearer than a banner, and it stops the user from accidentally editing something they just submitted.
 
-The API key is committed to the repo. That's how the scaffolding was set up (inside `NetworkingTargetType.swift`), so I left it there to make the reviewer's life easier. In a real project it would live outside the source tree (Arkana, an xcconfig, or a git-ignored secrets file).
+The Cat API key lives outside the source tree in `ApplaudoChallenge/Secrets.xcconfig` (gitignored). Xcode injects it into the app's `Info.plist` as `CAT_API_KEY` at build time, and `NetworkingTargetType` reads it at runtime via `Bundle.main.object(forInfoDictionaryKey:)`. A committed `Secrets.xcconfig.example` template and a README section show reviewers how to drop their own key in. For a real project I'd go further — Arkana or a build-phase decrypt step to keep the key out of the built binary — but for a take-home this is the right shape without dragging in another tool.
 
 Interactive dismissal of the form is disabled once there's data in it. Try to swipe it away and you get a discard confirmation. Slightly more friction, but no accidental data loss.
 
