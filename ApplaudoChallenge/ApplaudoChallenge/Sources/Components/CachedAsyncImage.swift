@@ -24,6 +24,7 @@ struct CachedAsyncImage<Content: View, Placeholder: View>: View {
         }
     }
 
+    @MainActor
     private func loadImage() async {
         guard let url else {
             phase = .failure(URLError(.badURL))

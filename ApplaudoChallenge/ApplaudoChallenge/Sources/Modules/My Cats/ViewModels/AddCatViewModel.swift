@@ -74,6 +74,31 @@ final class AddCatViewModel: ObservableObject {
         currentStep -= 1
     }
 
+    var canSave: Bool {
+        isStep1Valid && isStep2Valid
+    }
+
+    func jumpToFirstInvalidStep() {
+        if !isStep1Valid {
+            currentStep = 0
+            _ = validateStep1()
+        } else if !isStep2Valid {
+            currentStep = 1
+            _ = validateStep2()
+        }
+    }
+
+    private var isStep1Valid: Bool {
+        let trimmedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        return (2...30).contains(trimmedName.count) && !breedName.isEmpty
+    }
+
+    private var isStep2Valid: Bool {
+        guard let ageInt = Int(age), (0...30).contains(ageInt) else { return false }
+        let trimmedDesc = shortDescription.trimmingCharacters(in: .whitespacesAndNewlines)
+        return (10...200).contains(trimmedDesc.count) && !color.isEmpty && gender != nil
+    }
+
     func save(context: ModelContext) {
         guard let ageInt = Int(age), let gender else { return }
 
