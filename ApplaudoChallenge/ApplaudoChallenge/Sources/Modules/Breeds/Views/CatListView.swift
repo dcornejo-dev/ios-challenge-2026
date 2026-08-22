@@ -34,7 +34,7 @@ struct CatListView: View {
         case .loaded(let breeds):
             ScrollView {
                 LazyVStack(spacing: AppTheme.Spacing.md) {
-                    ForEach(breeds) { breed in
+                    ForEach(Array(breeds.enumerated()), id: \.element.id) { index, breed in
                         NavigationLink(value: breed) {
                             AppCard(
                                 title: breed.name,
@@ -45,7 +45,17 @@ struct CatListView: View {
                             )
                         }
                         .buttonStyle(.plain)
+                        .onAppear {
+                            if breeds.count >= 2, index == breeds.count - 2 {
+                                viewModel.loadNextPage()
+                            }
+                        }
                     }
+                    PaginationFooter(
+                        isLoading: viewModel.isLoadingMore,
+                        errorMessage: viewModel.paginationError,
+                        onRetry: { viewModel.retryLoadNextPage() }
+                    )
                 }
                 .padding(.horizontal, AppTheme.Spacing.md)
                 .padding(.vertical, AppTheme.Spacing.sm)
